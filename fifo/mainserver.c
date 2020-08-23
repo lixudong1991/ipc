@@ -13,7 +13,8 @@ int main(int argc,char **argv)
         if(buff[n-1]=='\n')
             n--;
         buff[n]='\0';
-        if((ptr=strchr(buff,'.'))==NULL){
+        printf("recv buff: %s\n",buff);
+        if((ptr=strchr(buff,' '))==NULL){
             err_msg("bogus request: %s",buff);
             continue;
         }
