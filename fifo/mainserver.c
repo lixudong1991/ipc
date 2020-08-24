@@ -35,6 +35,7 @@ int main(int argc,char **argv)
                 Write(writefifo,buff,n);
             Close(fd);
             Close(writefifo);
+            
         }
     }
     exit(0);
