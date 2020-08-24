@@ -55,5 +55,6 @@ int main(int argc,char **argv)
     clientWork(pipe2[0],pipe1[1]);
     Waitpid(childpid,NULL,0);
     exit(0);
+
 }
 
