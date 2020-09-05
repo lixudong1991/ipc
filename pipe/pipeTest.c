@@ -4,9 +4,11 @@ void serverWork(int pipein,int pipeout)
     int fd;
     ssize_t n;
     char    buff[MAXLINE];
+    printf("read\n");
     if((n=Read(pipein,buff,MAXLINE))==0)
         err_quit("end-of-file while reading pathname");
     buff[n]='\0';
+    printf("read end\n");
     if((fd=open(buff,O_RDONLY))<0){
         snprintf(buff+n,sizeof(buff)-n,":cant open, %s\n",strerror(errno));
         n=strlen(buff);
