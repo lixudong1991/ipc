@@ -13,8 +13,15 @@ int main(int argc,char *argv[])
 	printf("信号量的最大值: 		   %ld\n",sysconf(_SC_SEM_VALUE_MAX));
 	printf("每个进程可排队信号的最大个数:      %ld\n",sysconf(_SC_SIGQUEUE_MAX));
 	printf("相对路径名的最大长度:		   %ld\n",pathconf(".",_PC_PATH_MAX));
+	printf("文件名的最大长度:		   %ld\n",pathconf(".",_PC_NAME_MAX));
 	printf("可原子的写入PIPE的最大字节数:	   %ld\n",pathconf(".",_PC_PIPE_BUF));
+	printf("是否截断文件名和路径名的长度:      %ld\n",_POSIX_NO_TRUNC);
 	printf("posix version %ld\n",sysconf(_SC_VERSION));
 	printf("xsi version %ld\n",sysconf(_SC_XOPEN_VERSION));
 	printf("路径的最大长度:%ld\n当前目录: %s\n",psize,getcwd(pat,psize));
+	printf("int,long,指针和off_t是32位:              %ld\n",sysconf(_SC_V7_ILP32_OFF32));
+	printf("int,long,指针类型是32位,off_t至少是64位: %ld\n",sysconf(_SC_V7_ILP32_OFFBIG));
+//	printf("int是32位,long,指针,off_t是64位:         %ld\n",sysconf(_SC_V7_LP64_OFF64));
+//	printf("int是32位,long,指针和off_t至少是64位:    %ld\n",sysconf(_SC_V7_LP64_OFFBIG))
+
 }
