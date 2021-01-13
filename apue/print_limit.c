@@ -21,7 +21,7 @@ int main(int argc,char *argv[])
 	printf("路径的最大长度:%ld\n当前目录: %s\n",psize,getcwd(pat,psize));
 	printf("int,long,指针和off_t是32位:              %ld\n",sysconf(_SC_V7_ILP32_OFF32));
 	printf("int,long,指针类型是32位,off_t至少是64位: %ld\n",sysconf(_SC_V7_ILP32_OFFBIG));
-//	printf("int是32位,long,指针,off_t是64位:         %ld\n",sysconf(_SC_V7_LP64_OFF64));
+	printf("_POSIX_CHOWN_RESTRICTED:         %ld\n",pathconf(argv[1],_PC_CHOWN_RESTRICTED));
 //	printf("int是32位,long,指针和off_t至少是64位:    %ld\n",sysconf(_SC_V7_LP64_OFFBIG))
 
 }
