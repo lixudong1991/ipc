@@ -4,21 +4,29 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <sys/sysmacros.h>
 char strbuff[MAXLINE];
 char*  printfile(const char *name,struct stat *fst)
 {
-	char *ptr,buf[20];
-	int maxlen=82;
+	char *ptr,buf[20],dev[8];
+	int maxlen=96;
 	memset(strbuff,0,MAXLINE);
 	memset(strbuff,0x20,maxlen);
+	dev[0]=0;
 	if(S_ISREG(fst->st_mode))
 		ptr="regular";
 	else if(S_ISDIR(fst->st_mode))
 		ptr="dir";
 	else if(S_ISCHR(fst->st_mode))
+	{
 		ptr="chardeive";
+		snprintf(dev,8,"(%d/%d)",major(fst->st_rdev),minor(fst->st_rdev));
+	}
 	else if(S_ISBLK(fst->st_mode))
+	{
 		ptr="blockdevice";
+		snprintf(dev,8,"(%d/%d)",major(fst->st_rdev),minor(fst->st_rdev));
+	}
 	else if(S_ISFIFO(fst->st_mode))
 		ptr="fifo";
 	else if(S_ISLNK(fst->st_mode))
@@ -31,16 +39,18 @@ char*  printfile(const char *name,struct stat *fst)
 	//snprintf(strbuff+maxlen,MAXLINE-maxlen,"  %d  %d  %ld",fst->st_uid,(int)fst->st_gid,(long)fst->st_size);
 	memcpy(strbuff,name,strlen(name));
 	memcpy(strbuff+22,ptr,strlen(ptr));
-	snprintf(buf,20,"%d",fst->st_uid);
+	snprintf(buf,7,"%d",fst->st_uid);
 	memcpy(strbuff+36,buf,strlen(buf));
-	snprintf(buf,20,"%d",fst->st_gid);
+	snprintf(buf,7,"%d",fst->st_gid);
 	memcpy(strbuff+44,buf,strlen(buf));
-	snprintf(buf,20,"%ld",fst->st_size);
+	snprintf(buf,11,"%ld",fst->st_size);
 	memcpy(strbuff+52,buf,strlen(buf));
-	snprintf(buf,20,"%d",fst->st_nlink);
+	snprintf(buf,7,"%d",fst->st_nlink);
 	memcpy(strbuff+64,buf,strlen(buf));
-	snprintf(buf,20,"%d",fst->st_ino);
+	snprintf(buf,11,"%d",fst->st_ino);
 	memcpy(strbuff+72,buf,strlen(buf));
+	snprintf(buf,13,"%d/%d%s",major(fst->st_dev),minor(fst->st_dev),dev);
+	memcpy(strbuff+84,buf,strlen(buf));
 	return strbuff;			
 }
 int main(int argc,char *argv[])
@@ -60,7 +70,7 @@ int main(int argc,char *argv[])
 	if(lstat(pat,&filest)==0)
 	{
 		memset(strbuff,0,MAXLINE);
-		memset(strbuff,0x20,82);
+		memset(strbuff,0x20,96);
 		memcpy(strbuff,"name",4);
 	        memcpy(strbuff+22,"type",4);
                 memcpy(strbuff+36,"uid",3);
@@ -68,6 +78,7 @@ int main(int argc,char *argv[])
        		memcpy(strbuff+52,"size",4);
         	memcpy(strbuff+64,"linksum",7);	
 		memcpy(strbuff+72,"inode",5);	
+		memcpy(strbuff+84,"dev(rdev)",9);
 		printf("%s\n",strbuff);
 		if(S_ISDIR(filest.st_mode))
 		{
