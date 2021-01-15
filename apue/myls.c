@@ -8,8 +8,8 @@
 char strbuff[MAXLINE];
 char*  printfile(const char *name,struct stat *fst)
 {
-	char *ptr,buf[20],dev[8];
-	int maxlen=96;
+	char *ptr,buf[20],dev[10];
+	int maxlen=100;
 	memset(strbuff,0,MAXLINE);
 	memset(strbuff,0x20,maxlen);
 	dev[0]=0;
@@ -20,12 +20,12 @@ char*  printfile(const char *name,struct stat *fst)
 	else if(S_ISCHR(fst->st_mode))
 	{
 		ptr="chardeive";
-		snprintf(dev,8,"(%d/%d)",major(fst->st_rdev),minor(fst->st_rdev));
+		snprintf(dev,10,"(%d/%d)",major(fst->st_rdev),minor(fst->st_rdev));
 	}
 	else if(S_ISBLK(fst->st_mode))
 	{
 		ptr="blockdevice";
-		snprintf(dev,8,"(%d/%d)",major(fst->st_rdev),minor(fst->st_rdev));
+		snprintf(dev,10,"(%d/%d)",major(fst->st_rdev),minor(fst->st_rdev));
 	}
 	else if(S_ISFIFO(fst->st_mode))
 		ptr="fifo";
@@ -49,7 +49,7 @@ char*  printfile(const char *name,struct stat *fst)
 	memcpy(strbuff+64,buf,strlen(buf));
 	snprintf(buf,11,"%d",fst->st_ino);
 	memcpy(strbuff+72,buf,strlen(buf));
-	snprintf(buf,13,"%d/%d%s",major(fst->st_dev),minor(fst->st_dev),dev);
+	snprintf(buf,17,"%d/%d%s",major(fst->st_dev),minor(fst->st_dev),dev);
 	memcpy(strbuff+84,buf,strlen(buf));
 	return strbuff;			
 }
