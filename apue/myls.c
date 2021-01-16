@@ -5,11 +5,15 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <sys/sysmacros.h>
+#include <grp.h>
+#include <pwd.h>
 char strbuff[MAXLINE];
 char*  printfile(const char *name,struct stat *fst)
 {
 	char *ptr,buf[20],dev[10];
 	int maxlen=100;
+	struct passwd *pw;
+	struct group *grp;
 	memset(strbuff,0,MAXLINE);
 	memset(strbuff,0x20,maxlen);
 	dev[0]=0;
@@ -39,10 +43,12 @@ char*  printfile(const char *name,struct stat *fst)
 	//snprintf(strbuff+maxlen,MAXLINE-maxlen,"  %d  %d  %ld",fst->st_uid,(int)fst->st_gid,(long)fst->st_size);
 	memcpy(strbuff,name,strlen(name));
 	memcpy(strbuff+22,ptr,strlen(ptr));
-	snprintf(buf,7,"%d",fst->st_uid);
-	memcpy(strbuff+36,buf,strlen(buf));
-	snprintf(buf,7,"%d",fst->st_gid);
-	memcpy(strbuff+44,buf,strlen(buf));
+//	snprintf(buf,7,"%s",fst->st_uid);
+	pw=getpwuid(fst->st_uid);	
+	memcpy(strbuff+36,pw->pw_name,strlen(pw->pw_name));
+//	snprintf(buf,7,"%s",fst->st_gid);
+	grp=getgrgid(fst->st_gid);
+	memcpy(strbuff+44,grp->gr_name,strlen(grp->gr_name));
 	snprintf(buf,11,"%ld",fst->st_size);
 	memcpy(strbuff+52,buf,strlen(buf));
 	snprintf(buf,7,"%d",fst->st_nlink);
@@ -98,7 +104,8 @@ int main(int argc,char *argv[])
 			}
 		}
 		else
-			printf("%s\n",printfile(pat,&filest));			
+			printf("%s\n",printfile(pat,&filest));
+		printf("st_blksize %d\n",filest.st_blksize);			
 	}
 	free(pat);
 	close(dirfd);	
