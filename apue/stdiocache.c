@@ -62,7 +62,7 @@ void dumpstdio()
 int main()
 {
 	FILE *file;
-	char cache[4096]={0},data[4096]={0};
+	char cache[4096]={0},data[8193]={0};
 	dumpstdio();
 	if((file=fopen("temp.txt","r+"))==NULL)
 		err_sys("open file error");
@@ -70,6 +70,12 @@ int main()
 		err_sys("setvbuf error");
 	pr_stdio("temp.txt",file);
 	int readsize=fread(data,1,1024,file);
+	memset(data,0,sizeof(data));
+	readsize=fread(data,1,1024,file);
+	memset(data,0,sizeof(data));
+	readsize=fread(data,1,4096,file);
+	memset(data,0,sizeof(data));
+	readsize=fread(data,1,4096,file);
 	exit(0);
 }
 
