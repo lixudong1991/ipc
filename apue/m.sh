@@ -1,3 +1,4 @@
+#! /bin/sh
 #libpath = /home/lxd/apue/apue.3e
 prom=$1
 echo "gcc $prom.c -o $prom -L. -lapue"
